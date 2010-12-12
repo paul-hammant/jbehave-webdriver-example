@@ -9,6 +9,8 @@ import org.jbehave.core.io.LoadFromClasspath;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
 import org.jbehave.core.reporters.ConsoleOutput;
+import org.jbehave.core.reporters.DelegatingStoryReporter;
+import org.jbehave.core.reporters.NullStoryReporter;
 import org.jbehave.core.reporters.StoryReporter;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.CandidateSteps;
@@ -40,7 +42,8 @@ public class EtsyDotComStories extends JUnitStories {
 
     private WebDriverProvider driverProvider = new TypeWebDriverProvider();
     private Configuration configuration;
-    private static ContextView contextView = new LocalFrameContextView().sized(640,48);
+    private static ContextView contextView = new LocalFrameContextView().sized(640,120);
+    private static SeleniumContext seleniumContext = new SeleniumContext();
 
     static {
         System.setProperty("webdriver.firefox.profile", "WebDriver");
@@ -56,12 +59,12 @@ public class EtsyDotComStories extends JUnitStories {
 
         return new SeleniumConfiguration()
             .useWebDriverProvider(driverProvider)
-            .useSeleniumContext(new SeleniumContext())
+            .useSeleniumContext(seleniumContext)
             .useFailureStrategy(new FailingUponPendingStep())
             .useStepMonitor(new SeleniumStepMonitor(contextView, new SeleniumContext(), new SilentStepMonitor()))
             .useStoryLoader(new LoadFromClasspath(embeddableClass.getClassLoader()))
             .useStoryReporterBuilder(
-                new MyStoryReporterBuilder(new SeleniumContext())
+                new MyStoryReporterBuilder()
                     .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                     .withDefaultFormats()
                     .withFormats(IDE_CONSOLE, TXT, HTML, XML));
@@ -114,49 +117,41 @@ public class EtsyDotComStories extends JUnitStories {
     @Override
     protected List<String> storyPaths() {
         return new StoryFinder()
-                .findPaths(codeLocationFromClass(this.getClass()).getFile(), asList("**/*"+ storyFilter() +".story"), null);
+                .findPaths(codeLocationFromClass(this.getClass())
+                        .getFile(), asList("**/*.story"), null);
     }
 
-
-    /**
-     * set this on the command line -DstepFilter=foo
-     * @return
-     */
-    private String storyFilter() {
-        String storyFilter = System.getProperty("storyFilter");
-        if (storyFilter == null) {
-            storyFilter = "";
-        }
-        return storyFilter;
-    }
 
     private static class MyStoryReporterBuilder extends StoryReporterBuilder {
-        private final SeleniumContext seleniumContext;
-
-        public MyStoryReporterBuilder(SeleniumContext seleniumContext) {
-            this.seleniumContext = seleniumContext;
-        }
 
         @Override
         public StoryReporter reporterFor(String storyPath, Format format) {
-            if ( format == IDE_CONSOLE ){
-                return new ConsoleOutput(){
-                    @Override
-                    public void beforeScenario(String title, boolean givenStory) {
-                        seleniumContext.setCurrentScenario(title);
-                        super.beforeScenario(title, givenStory);
-                    }
 
-                    @Override
-                    public void afterStory(boolean givenStory) {
-                        contextView.close();
-                        super.afterStory(givenStory);
-                    }
-                };
+            if ( format == IDE_CONSOLE ){
+                return new DelegatingStoryReporter(new SeleniumContextStoryReporter(), new ConsoleOutput());
             } else {
                 return super.reporterFor(storyPath, format);
             }
         }
 
+    }
+
+    /**
+     * This could go into JBehave-Web perhaps.
+     */
+    private static class SeleniumContextStoryReporter extends NullStoryReporter {
+        @Override
+        public void beforeScenario(String title, boolean givenStory) {
+            seleniumContext.setCurrentScenario(title);
+        }
+    }
+
+    @Override
+    public void run() throws Throwable {
+        try {
+            super.run();
+        } finally {
+            contextView.close();
+        }
     }
 }
