@@ -99,13 +99,10 @@ public class EtsyDotComStories extends JUnitStories {
                     }
                     return inst;
                 } catch (IllegalAccessException e) {
-                    System.out.println("--> iae");
                     return ""; // not a steps class, discard for the sake of steps registration
                 } catch (InvocationTargetException e) {
-                    System.out.println("--> ite");
                     return ""; // not a steps class, discard for the sake of steps registration
                 } catch (InstantiationException e) {
-                    System.out.println("--> ie " + parsedClass.getName());
                     return ""; // not a steps class, discard for the sake of steps registration
                 }
             }
