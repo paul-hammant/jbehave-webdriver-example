@@ -21,7 +21,7 @@ import org.jbehave.web.selenium.TypeWebDriverProvider;
 import org.jbehave.web.selenium.WebDriverProvider;
 import org.jbehave.web.selenium.WebDriverScreenshotOnFailure;
 
-import static com.paulhammant.jbehave.scenarios.ExampleStories.makeConfiguration;
+import static com.paulhammant.jbehave.scenarios.EtsyDotComStories.makeConfiguration;
 
 public class ExampleStoriesWebApplication extends WebRunnerApplication {
 

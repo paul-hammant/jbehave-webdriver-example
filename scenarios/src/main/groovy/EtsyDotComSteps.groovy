@@ -10,13 +10,13 @@ import pages.Home
 import pages.SearchResults
 import pages.Site
 
-public class EtsySteps {
+public class EtsyDotComSteps {
 
   WebDriverProvider webDriverProvider;
 
   private AdvancedSearch advancedSearch
 
-  def EtsySteps() {
+  def EtsyDotComSteps() {
     GrooBe.activate()
   }
 

@@ -36,7 +36,7 @@ import static org.jbehave.core.reporters.StoryReporterBuilder.Format.IDE_CONSOLE
 import static org.jbehave.core.reporters.StoryReporterBuilder.Format.TXT;
 import static org.jbehave.core.reporters.StoryReporterBuilder.Format.XML;
 
-public class ExampleStories extends JUnitStories {
+public class EtsyDotComStories extends JUnitStories {
 
     private WebDriverProvider driverProvider = new TypeWebDriverProvider();
     private Configuration configuration;
