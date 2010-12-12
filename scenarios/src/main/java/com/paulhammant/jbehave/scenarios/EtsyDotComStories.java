@@ -8,10 +8,6 @@ import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.LoadFromClasspath;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.junit.JUnitStories;
-import org.jbehave.core.reporters.ConsoleOutput;
-import org.jbehave.core.reporters.DelegatingStoryReporter;
-import org.jbehave.core.reporters.NullStoryReporter;
-import org.jbehave.core.reporters.StoryReporter;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.CandidateSteps;
 import org.jbehave.core.steps.SilentStepMonitor;
@@ -22,6 +18,7 @@ import org.jbehave.web.selenium.LocalFrameContextView;
 import org.jbehave.web.selenium.PerStoriesWebDriverSteps;
 import org.jbehave.web.selenium.SeleniumConfiguration;
 import org.jbehave.web.selenium.SeleniumContext;
+import org.jbehave.web.selenium.SeleniumContextOutput;
 import org.jbehave.web.selenium.SeleniumStepMonitor;
 import org.jbehave.web.selenium.TypeWebDriverProvider;
 import org.jbehave.web.selenium.WebDriverProvider;
@@ -33,10 +30,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-import static org.jbehave.core.reporters.StoryReporterBuilder.Format.HTML;
-import static org.jbehave.core.reporters.StoryReporterBuilder.Format.IDE_CONSOLE;
-import static org.jbehave.core.reporters.StoryReporterBuilder.Format.TXT;
-import static org.jbehave.core.reporters.StoryReporterBuilder.Format.XML;
+import static org.jbehave.core.reporters.Format.CONSOLE;
+import static org.jbehave.core.reporters.Format.HTML;
+import static org.jbehave.core.reporters.Format.TXT;
+import static org.jbehave.core.reporters.Format.XML;
 
 public class EtsyDotComStories extends JUnitStories {
 
@@ -64,10 +61,10 @@ public class EtsyDotComStories extends JUnitStories {
             .useStepMonitor(new SeleniumStepMonitor(contextView, new SeleniumContext(), new SilentStepMonitor()))
             .useStoryLoader(new LoadFromClasspath(embeddableClass.getClassLoader()))
             .useStoryReporterBuilder(
-                new MyStoryReporterBuilder()
+                new StoryReporterBuilder()
                     .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                     .withDefaultFormats()
-                    .withFormats(IDE_CONSOLE, TXT, HTML, XML));
+                    .withFormats(new SeleniumContextOutput(seleniumContext), CONSOLE, TXT, HTML, XML));
     }
 
     @Override
@@ -121,30 +118,9 @@ public class EtsyDotComStories extends JUnitStories {
                         .getFile(), asList("**/*.story"), null);
     }
 
-
-    private static class MyStoryReporterBuilder extends StoryReporterBuilder {
-
-        @Override
-        public StoryReporter reporterFor(String storyPath, Format format) {
-
-            if ( format == IDE_CONSOLE ){
-                return new DelegatingStoryReporter(new SeleniumContextStoryReporter(), new ConsoleOutput());
-            } else {
-                return super.reporterFor(storyPath, format);
-            }
-        }
-
-    }
-
     /**
      * This could go into JBehave-Web perhaps.
      */
-    private static class SeleniumContextStoryReporter extends NullStoryReporter {
-        @Override
-        public void beforeScenario(String title, boolean givenStory) {
-            seleniumContext.setCurrentScenario(title);
-        }
-    }
 
     @Override
     public void run() throws Throwable {
@@ -154,4 +130,5 @@ public class EtsyDotComStories extends JUnitStories {
             contextView.close();
         }
     }
+
 }
