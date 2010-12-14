@@ -1,4 +1,4 @@
-package com.paulhammant.jbehave.scenarios;
+package org.jbehave.tutorials.etsy;
 
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.groovy.GroovyContext;
