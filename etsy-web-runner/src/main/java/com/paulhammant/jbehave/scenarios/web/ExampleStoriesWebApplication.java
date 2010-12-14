@@ -1,12 +1,5 @@
 package com.paulhammant.jbehave.scenarios.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.List;
-
 import groovy.lang.GroovyCodeSource;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.groovy.BytecodeGroovyClassLoader;
@@ -21,7 +14,14 @@ import org.jbehave.web.selenium.TypeWebDriverProvider;
 import org.jbehave.web.selenium.WebDriverProvider;
 import org.jbehave.web.selenium.WebDriverScreenshotOnFailure;
 
-import static com.paulhammant.jbehave.scenarios.EtsyDotComStories.makeConfiguration;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.List;
+
+import static org.jbehave.tutorials.etsy.EtsyDotComStories.makeConfiguration;
 
 public class ExampleStoriesWebApplication extends WebRunnerApplication {
 

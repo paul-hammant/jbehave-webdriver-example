@@ -121,7 +121,7 @@
                             <directory>${project.build.directory}/resources</directory>
                         </resource>
                         <resource>
-                            <directory>${basedir}/../scenarios/src/main/groovy</directory>
+                            <directory>${basedir}/../etsy-stories/src/main/groovy</directory>
                             <targetPath>WEB-INF/classes</targetPath>
                         </resource>
                     </webResources>

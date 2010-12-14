@@ -16,8 +16,8 @@
     </properties>
 
 	<modules>
-          <module>scenarios</module>
-          <module>scenarios-webapp</module>
+          <module>etsy-stories</module>
+          <module>etsy-web-runner</module>
 	</modules>
 
 </project>
