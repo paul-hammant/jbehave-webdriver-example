@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.paulhammant.jbehave</groupId>
-		<artifactId>jbehave-example-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+	    <groupId>org.jbehave.tutorials</groupId>
+		<artifactId>etsy-stories-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
 	</parent>
-    <artifactId>jbehave-example-scenarios-webapp</artifactId>
-    <packaging>war</packaging>
-    <name>JBehave Example Scenarios Webapp</name>
+	<artifactId>etsy-stories-web-runner</artifactId>    
+	<packaging>war</packaging>
+    <name>JBehave Tutorial using Etsy.com - Scenarios Webapp</name>
 
     <properties>
         <!-- also check parent project for property values-->
